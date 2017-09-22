@@ -1,5 +1,6 @@
 #create a dummy user table
 
+USE authority;
 CREATE TABLE `user` (
   `userId` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
