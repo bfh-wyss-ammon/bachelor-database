@@ -70,18 +70,35 @@ CREATE TABLE `cyrptogroup` (
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
+
 CREATE TABLE `membership` (
   `membershipId` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(11) NOT NULL,
   `groupId` int(11) NOT NULL,
   `bigY` varchar(1400) DEFAULT NULL,
-  `approved` tinyint(1) NOT NULL,
+  `approved` tinyint(1) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
   PRIMARY KEY (`membershipId`),
   KEY `userId_idx` (`userId`),
   KEY `groupId_idx` (`groupId`),
   CONSTRAINT `groupId` FOREIGN KEY (`groupId`) REFERENCES `cyrptogroup` (`groupId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `userId` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
+-------------------------------------
+-- table: joinsession
+-- created: 29.09.2017
+-- creator: Pascal Ammon
+-------------------------------------
+
+CREATE TABLE `joinsession` (
+  `joinsessionId` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `token` varchar(36) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  PRIMARY KEY (`joinsessionId`),
+  KEY `userId_idx` (`userId`),
+  CONSTRAINT `userId` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 
