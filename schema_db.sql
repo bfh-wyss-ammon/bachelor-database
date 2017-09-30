@@ -145,6 +145,22 @@ CREATE TABLE `publickey` (
   PRIMARY KEY (`publicKeyId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
+-------------------------------------
+-- table: provider.tuple
+-- created: 30.09.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+
+CREATE TABLE `tuple` (
+  `tupleId` int(11) NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) NOT NULL,
+  `longitude` decimal(10,0) NOT NULL,
+  `latitiude` decimal(10,0) NOT NULL,
+  `created` datetime NOT NULL,
+  `received` datetime NOT NULL,
+  `signature` varchar(1400) NOT NULL,
+  PRIMARY KEY (`tupleId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 
