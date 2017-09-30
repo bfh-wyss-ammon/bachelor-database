@@ -151,16 +151,17 @@ CREATE TABLE `publickey` (
 -- creator: Gabriel Wyss
 -------------------------------------
 
+#note: serious issue. all the floating point values (longitude,latitude) will need to have precision 13 and scale 10.
+
 CREATE TABLE `tuple` (
   `tupleId` int(11) NOT NULL AUTO_INCREMENT,
   `groupId` int(11) NOT NULL,
-  `longitude` decimal(10,0) NOT NULL,
-  `latitiude` decimal(10,0) NOT NULL,
+  `longitude` decimal(13,10) NOT NULL,
+  `latitiude` decimal(13,10) NOT NULL,
   `created` datetime NOT NULL,
   `received` datetime NOT NULL,
   `signature` varchar(1400) NOT NULL,
   PRIMARY KEY (`tupleId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 
 
