@@ -116,9 +116,10 @@ USE provider;
 -------------------------------------
 
 CREATE TABLE `cryptogroup` (
-  `groupId` int(11) NOT NULL AUTO_INCREMENT,
+  `providerGroupId` int(11) NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) NOT NULL,
   `publicKeyId` int(11) NOT NULL,
-  PRIMARY KEY (`groupId`),
+  PRIMARY KEY (`providerGroupId`),
   KEY `FK_groupId_idx` (`publicKeyId`),
   CONSTRAINT `FK_publicKey` FOREIGN KEY (`publicKeyId`) REFERENCES `publickey` (`publicKeyId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
