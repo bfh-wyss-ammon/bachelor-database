@@ -110,26 +110,10 @@ CREATE TABLE `joinsession` (
 CREATE DATABASE IF NOT EXISTS `provider` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE provider;
 -------------------------------------
--- table: provider.cryptogroup
--- created: 30.09.2017
--- creator: Gabriel Wyss
--------------------------------------
-
-CREATE TABLE `cryptogroup` (
-  `providerGroupId` int(11) NOT NULL AUTO_INCREMENT,
-  `groupId` int(11) NOT NULL,
-  `publicKeyId` int(11) NOT NULL,
-  PRIMARY KEY (`providerGroupId`),
-  KEY `FK_groupId_idx` (`publicKeyId`),
-  CONSTRAINT `FK_publicKey` FOREIGN KEY (`publicKeyId`) REFERENCES `publickey` (`publicKeyId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--------------------------------------
 -- table: provider.publickey
--- created: 30.09.2017
+-- created: 05.10.2017
 -- creator: Gabriel Wyss
 -------------------------------------
-
 CREATE TABLE `publickey` (
   `publicKeyId` int(11) NOT NULL AUTO_INCREMENT,
   `n` varchar(1400) NOT NULL,
@@ -143,25 +127,57 @@ CREATE TABLE `publickey` (
   `bigG` varchar(1400) NOT NULL,
   `bigH` varchar(1400) NOT NULL,
   PRIMARY KEY (`publicKeyId`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+-------------------------------------
+-- table: provider.cryptogroup
+-- created: 05.10.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+CREATE TABLE `cryptogroup` (
+  `providerGroupId` int(11) NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) NOT NULL,
+  `publicKeyId` int(11) NOT NULL,
+  PRIMARY KEY (`providerGroupId`),
+  KEY `FK_groupId_idx` (`publicKeyId`),
+  KEY `FK_groupId_id_idx` (`groupId`),
+  CONSTRAINT `FK_publicKey` FOREIGN KEY (`publicKeyId`) REFERENCES `publickey` (`publicKeyId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+-------------------------------------
+-- table: provider.cryptogroup
+-- created: 05.10.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+CREATE TABLE `signature` (
+  `signatureId` int(11) NOT NULL,
+  `u` varchar(1400) NOT NULL,
+  `bigU1` varchar(1400) NOT NULL,
+  `bigU2` varchar(1400) NOT NULL,
+  `bigU3` varchar(1400) NOT NULL,
+  `zx` varchar(1400) NOT NULL,
+  `zr` varchar(1400) NOT NULL,
+  `ze` varchar(1400) NOT NULL,
+  `zbigR` varchar(1400) NOT NULL,
+  `c` varchar(1400) NOT NULL,
+  PRIMARY KEY (`signatureId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -------------------------------------
 -- table: provider.tuple
--- created: 30.09.2017
+-- created: 05.10.2017
 -- creator: Gabriel Wyss
 -------------------------------------
-
-#note: serious issue. all the floating point values (longitude,latitude) will need to have precision 13 and scale 10.
-
 CREATE TABLE `tuple` (
   `tupleId` int(11) NOT NULL AUTO_INCREMENT,
   `groupId` int(11) NOT NULL,
+  `signatureId` int(11) NOT NULL,
   `longitude` decimal(13,10) NOT NULL,
   `latitiude` decimal(13,10) NOT NULL,
   `created` datetime NOT NULL,
   `received` datetime NOT NULL,
-  `signature` varchar(1400) NOT NULL,
-  PRIMARY KEY (`tupleId`)
+  PRIMARY KEY (`tupleId`),
+  KEY `fk_tuple_to_signature_idx` (`signatureId`),
+  KEY `fk_tuple_to_group_idx` (`groupId`),
+  CONSTRAINT `fk_tuple_to_group` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`providerGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tuple_to_signature` FOREIGN KEY (`signatureId`) REFERENCES `signature` (`signatureId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
