@@ -101,4 +101,67 @@ CREATE TABLE `joinsession` (
   CONSTRAINT `userId` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
+-------------------------------------
+-- database: provider
+-- created: 30.09.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+
+CREATE DATABASE IF NOT EXISTS `provider` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE provider;
+-------------------------------------
+-- table: provider.cryptogroup
+-- created: 30.09.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+
+CREATE TABLE `cryptogroup` (
+  `providerGroupId` int(11) NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) NOT NULL,
+  `publicKeyId` int(11) NOT NULL,
+  PRIMARY KEY (`providerGroupId`),
+  KEY `FK_groupId_idx` (`publicKeyId`),
+  CONSTRAINT `FK_publicKey` FOREIGN KEY (`publicKeyId`) REFERENCES `publickey` (`publicKeyId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-------------------------------------
+-- table: provider.publickey
+-- created: 30.09.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+
+CREATE TABLE `publickey` (
+  `publicKeyId` int(11) NOT NULL AUTO_INCREMENT,
+  `n` varchar(1400) NOT NULL,
+  `a` varchar(1400) NOT NULL,
+  `g` varchar(1400) NOT NULL,
+  `h` varchar(1400) NOT NULL,
+  `w` varchar(1400) NOT NULL,
+  `bigQ` varchar(1400) NOT NULL,
+  `bigP` varchar(1400) NOT NULL,
+  `bigF` varchar(1400) NOT NULL,
+  `bigG` varchar(1400) NOT NULL,
+  `bigH` varchar(1400) NOT NULL,
+  PRIMARY KEY (`publicKeyId`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-------------------------------------
+-- table: provider.tuple
+-- created: 30.09.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+
+#note: serious issue. all the floating point values (longitude,latitude) will need to have precision 13 and scale 10.
+
+CREATE TABLE `tuple` (
+  `tupleId` int(11) NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) NOT NULL,
+  `longitude` decimal(13,10) NOT NULL,
+  `latitiude` decimal(13,10) NOT NULL,
+  `created` datetime NOT NULL,
+  `received` datetime NOT NULL,
+  `signature` varchar(1400) NOT NULL,
+  PRIMARY KEY (`tupleId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
