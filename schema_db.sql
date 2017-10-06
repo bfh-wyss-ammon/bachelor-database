@@ -149,7 +149,7 @@ CREATE TABLE `cryptogroup` (
 -- creator: Gabriel Wyss
 -------------------------------------
 CREATE TABLE `signature` (
-  `signatureId` int(11) NOT NULL,
+  `signatureId` int(11) NOT NULL AUTO_INCREMENT,
   `u` varchar(1400) NOT NULL,
   `bigU1` varchar(1400) NOT NULL,
   `bigU2` varchar(1400) NOT NULL,
@@ -172,7 +172,7 @@ CREATE TABLE `tuple` (
   `groupId` int(11) NOT NULL,
   `signatureId` int(11) NOT NULL,
   `longitude` decimal(13,10) NOT NULL,
-  `latitiude` decimal(13,10) NOT NULL,
+  `latitude` decimal(13,10) NOT NULL,
   `created` datetime NOT NULL,
   `received` datetime NOT NULL,
   PRIMARY KEY (`tupleId`),
