@@ -9,12 +9,15 @@ USE authority;
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
-CREATE TABLE `user` (
+REATE TABLE `user` (
   `userId` int(11) NOT NULL AUTO_INCREMENT,
+  `id` varchar(255) NOT NULL,
+  `firstname` varchar(255) NOT NULL,
+  `lastname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -------------------------------------
 -- table: publickey
@@ -144,7 +147,7 @@ CREATE TABLE `cryptogroup` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -------------------------------------
--- table: provider.cryptogroup
+-- table: provider.signature
 -- created: 05.10.2017
 -- creator: Gabriel Wyss
 -------------------------------------
