@@ -9,7 +9,7 @@ USE authority;
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
-REATE TABLE `user` (
+CREATE TABLE `user` (
   `userId` int(11) NOT NULL AUTO_INCREMENT,
   `id` varchar(255) NOT NULL,
   `firstname` varchar(255) NOT NULL,
