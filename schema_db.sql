@@ -101,7 +101,7 @@ CREATE TABLE `joinsession` (
   PRIMARY KEY (`joinsessionId`),
   KEY `userId_idx` (`userId`),
   CONSTRAINT `userId` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -------------------------------------
 -- database: provider
@@ -129,7 +129,7 @@ CREATE TABLE `publickey` (
   `bigG` varchar(1400) NOT NULL,
   `bigH` varchar(1400) NOT NULL,
   PRIMARY KEY (`publicKeyId`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 -------------------------------------
 -- table: provider.cryptogroup
 -- created: 05.10.2017
@@ -143,7 +143,7 @@ CREATE TABLE `cryptogroup` (
   KEY `FK_groupId_idx` (`publicKeyId`),
   KEY `FK_groupId_id_idx` (`groupId`),
   CONSTRAINT `FK_publicKey` FOREIGN KEY (`publicKeyId`) REFERENCES `publickey` (`publicKeyId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -------------------------------------
 -- table: provider.signature
@@ -162,7 +162,7 @@ CREATE TABLE `signature` (
   `zbigR` varchar(1400) NOT NULL,
   `c` varchar(1400) NOT NULL,
   PRIMARY KEY (`signatureId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -------------------------------------
 -- table: provider.tuple
@@ -177,9 +177,63 @@ CREATE TABLE `tuple` (
   `latitude` decimal(13,10) NOT NULL,
   `created` datetime NOT NULL,
   `received` datetime NOT NULL,
+  `hash`varchar(200) NOT NULL,
   PRIMARY KEY (`tupleId`),
   KEY `fk_tuple_to_signature_idx` (`signatureId`),
   KEY `fk_tuple_to_group_idx` (`groupId`),
   CONSTRAINT `fk_tuple_to_group` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`providerGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tuple_to_signature` FOREIGN KEY (`signatureId`) REFERENCES `signature` (`signatureId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+
+-------------------------------------
+-- table: provider.receipt
+-- created: 18.10.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+
+CREATE TABLE `receipt` (
+  `receiptId` int(11) NOT NULL AUTO_INCREMENT,
+  `tollpaid` int(11) NOT NULL,
+  `providersignatureonlist` varchar(200) NOT NULL,
+  `providersignatureontoll` varchar(200) NOT NULL,
+  PRIMARY KEY (`receiptId`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+
+-------------------------------------
+-- table: provider.tollsession
+-- created: 18.10.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+
+CREATE TABLE `tollsession` (
+  `tollsessionId` int(11) NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) NOT NULL,
+  `receiptId` int(11) NOT NULL,
+  `state` int(2) NOT NULL,
+  `token` varchar(36) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  PRIMARY KEY (`tollsessionId`),
+  KEY `fk_tollsession_idx` (`groupId`),
+  KEY `fk_receipt_idx` (`receiptId`),
+  CONSTRAINT `fk_receipt` FOREIGN KEY (`receiptId`) REFERENCES `receipt` (`receiptId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tollsession` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`groupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+
+-------------------------------------
+-- table: provider.tollsessiontotuple
+-- created: 18.10.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+
+CREATE TABLE `tollsessiontotuple` (
+  `tollsessiontotupleId` int(11) NOT NULL AUTO_INCREMENT,
+  `tollsessionId` int(11) NOT NULL,
+  `tupleId` int(11) NOT NULL,
+  PRIMARY KEY (`tollsessiontotupleId`),
+  KEY `fk_tollsession_tuple_idx` (`tollsessionId`),
+  KEY `fk_tuple_tollsession_idx` (`tupleId`),
+  CONSTRAINT `fk_tollsession_tuple` FOREIGN KEY (`tollsessionId`) REFERENCES `tollsession` (`tollsessionId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tuple_tollsession` FOREIGN KEY (`tupleId`) REFERENCES `tuple` (`tupleId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+
+
