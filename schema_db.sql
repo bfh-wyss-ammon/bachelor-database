@@ -5,7 +5,7 @@ CREATE DATABASE IF NOT EXISTS `authority` /*!40100 DEFAULT CHARACTER SET utf8 */
 USE authority;
 
 -------------------------------------
--- table: user
+-- table: authority.user
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
@@ -19,7 +19,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: publickey
+-- table: authority.publickey
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
@@ -39,7 +39,7 @@ CREATE TABLE `publickey` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: managerkey
+-- table: authority.managerkey
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
@@ -52,7 +52,7 @@ CREATE TABLE `managerkey` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: cyrptogroup
+-- table: authority.cyrptogroup
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
@@ -68,7 +68,7 @@ CREATE TABLE `cyrptogroup` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: membership
+-- table: authority.membership
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
@@ -88,12 +88,12 @@ CREATE TABLE `membership` (
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: joinsession
+-- table: authority.session
 -- created: 29.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
 
-CREATE TABLE `joinsession` (
+CREATE TABLE `session` (
   `joinsessionId` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(11) NOT NULL,
   `token` varchar(36) NOT NULL,
