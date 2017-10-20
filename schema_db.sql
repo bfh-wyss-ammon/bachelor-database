@@ -94,11 +94,11 @@ CREATE TABLE `membership` (
 -------------------------------------
 
 CREATE TABLE `session` (
-  `joinsessionId` int(11) NOT NULL AUTO_INCREMENT,
+  `sessionId` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(11) NOT NULL,
   `token` varchar(36) NOT NULL,
   `created` datetime DEFAULT NULL,
-  PRIMARY KEY (`joinsessionId`),
+  PRIMARY KEY (`sessionId`),
   KEY `userId_idx` (`userId`),
   CONSTRAINT `userId` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
@@ -200,13 +200,13 @@ CREATE TABLE `receipt` (
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: provider.tollsession
+-- table: provider.session
 -- created: 18.10.2017
 -- creator: Gabriel Wyss
 -------------------------------------
 
-CREATE TABLE `tollsession` (
-  `tollsessionId` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `session` (
+  `sessionId` int(11) NOT NULL AUTO_INCREMENT,
   `groupId` int(11) NOT NULL,
   `receiptId` int(11) NOT NULL,
   `state` int(2) NOT NULL,
@@ -220,19 +220,19 @@ CREATE TABLE `tollsession` (
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: provider.tollsessiontotuple
+-- table: provider.sessiontotuple
 -- created: 18.10.2017
 -- creator: Gabriel Wyss
 -------------------------------------
 
 CREATE TABLE `tollsessiontotuple` (
-  `tollsessiontotupleId` int(11) NOT NULL AUTO_INCREMENT,
-  `tollsessionId` int(11) NOT NULL,
+  `sessiontotupleId` int(11) NOT NULL AUTO_INCREMENT,
+  `sessionId` int(11) NOT NULL,
   `tupleId` int(11) NOT NULL,
-  PRIMARY KEY (`tollsessiontotupleId`),
-  KEY `fk_tollsession_tuple_idx` (`tollsessionId`),
+  PRIMARY KEY (`sessiontotupleId`),
+  KEY `fk_tollsession_tuple_idx` (`sessionId`),
   KEY `fk_tuple_tollsession_idx` (`tupleId`),
-  CONSTRAINT `fk_tollsession_tuple` FOREIGN KEY (`tollsessionId`) REFERENCES `tollsession` (`tollsessionId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tollsession_tuple` FOREIGN KEY (`sessionId`) REFERENCES `session` (`sessionId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tuple_tollsession` FOREIGN KEY (`tupleId`) REFERENCES `tuple` (`tupleId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
