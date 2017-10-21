@@ -52,11 +52,11 @@ CREATE TABLE `managerkey` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: authority.cyrptogroup
+-- table: authority.cryptogroup
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
-CREATE TABLE `cyrptogroup` (
+CREATE TABLE `cryptogroup` (
   `groupId` int(11) NOT NULL AUTO_INCREMENT,
   `managerKeyId` int(11) NOT NULL,
   `publicKeyId` int(11) NOT NULL,
