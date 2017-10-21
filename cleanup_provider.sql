@@ -5,7 +5,7 @@ TRUNCATE cryptogroup;
 TRUNCATE signature;
 TRUNCATE publickey;
 TRUNCATE tuple;
-TRUNCATE tollsessiontutuple;
+TRUNCATE sessiontotuple;
 TRUNCATE receipt;
-TRUNCATE tollsession;
+TRUNCATE session;
 

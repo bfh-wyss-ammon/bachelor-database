@@ -99,8 +99,8 @@ CREATE TABLE `session` (
   `token` varchar(36) NOT NULL,
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`sessionId`),
-  KEY `userId_idx` (`userId`),
-  CONSTRAINT `userId` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `buserId_idx` (`userId`),
+  CONSTRAINT `buserId` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -------------------------------------
@@ -109,7 +109,7 @@ CREATE TABLE `session` (
 -- creator: Gabriel Wyss
 -------------------------------------
 
-CREATE DATABASE IF NOT EXISTS `provider` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE IF NOT EXISTS `provider` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE provider;
 -------------------------------------
 -- table: provider.publickey
@@ -212,7 +212,7 @@ CREATE TABLE `session` (
   `state` int(2) NOT NULL,
   `token` varchar(36) NOT NULL,
   `created` datetime DEFAULT NULL,
-  PRIMARY KEY (`tollsessionId`),
+  PRIMARY KEY (`sessionId`),
   KEY `fk_tollsession_idx` (`groupId`),
   KEY `fk_receipt_idx` (`receiptId`),
   CONSTRAINT `fk_receipt` FOREIGN KEY (`receiptId`) REFERENCES `receipt` (`receiptId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -225,7 +225,7 @@ CREATE TABLE `session` (
 -- creator: Gabriel Wyss
 -------------------------------------
 
-CREATE TABLE `tollsessiontotuple` (
+CREATE TABLE `sessiontotuple` (
   `sessiontotupleId` int(11) NOT NULL AUTO_INCREMENT,
   `sessionId` int(11) NOT NULL,
   `tupleId` int(11) NOT NULL,
