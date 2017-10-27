@@ -236,4 +236,5 @@ CREATE TABLE `sessiontotuple` (
   CONSTRAINT `fk_tuple_tollsession` FOREIGN KEY (`tupleId`) REFERENCES `tuple` (`tupleId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `provider`.`vtuples` AS select `provider`.`tuple`.`groupId` AS `groupId`,`provider`.`tuple`.`hash` AS `hash`,`provider`.`tuple`.`created` AS `created`,1 AS `price` from `provider`.`tuple`;
 
