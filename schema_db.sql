@@ -186,20 +186,6 @@ CREATE TABLE `tuple` (
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: provider.receipt
--- created: 18.10.2017
--- creator: Gabriel Wyss
--------------------------------------
-
-CREATE TABLE `receipt` (
-  `receiptId` int(11) NOT NULL AUTO_INCREMENT,
-  `tollpaid` int(11) NOT NULL,
-  `providersignatureonlist` varchar(200) NOT NULL,
-  `providersignatureontoll` varchar(200) NOT NULL,
-  PRIMARY KEY (`receiptId`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
-
--------------------------------------
 -- table: provider.session
 -- created: 18.10.2017
 -- creator: Gabriel Wyss
@@ -208,33 +194,21 @@ CREATE TABLE `receipt` (
 CREATE TABLE `session` (
   `sessionId` int(11) NOT NULL AUTO_INCREMENT,
   `groupId` int(11) NOT NULL,
-  `receiptId` int(11) NOT NULL,
+  `signatureId` int(11) DEFAULT NULL,
   `state` int(2) NOT NULL,
   `token` varchar(36) NOT NULL,
   `created` datetime DEFAULT NULL,
+  `invoiceItemsCreated` datetime DEFAULT NULL,
+  `period` datetime DEFAULT NULL,
+  `signatureOnTuples` varchar(700) DEFAULT NULL,
+  `paidAmount` int(11) DEFAULT NULL,
   PRIMARY KEY (`sessionId`),
   KEY `fk_tollsession_idx` (`groupId`),
-  KEY `fk_receipt_idx` (`receiptId`),
-  CONSTRAINT `fk_receipt` FOREIGN KEY (`receiptId`) REFERENCES `receipt` (`receiptId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `fk_session_signature_idx` (`signatureId`),
+  CONSTRAINT `fk_session_signature` FOREIGN KEY (`signatureId`) REFERENCES `signature` (`signatureId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tollsession` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`groupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--------------------------------------
--- table: provider.sessiontotuple
--- created: 18.10.2017
--- creator: Gabriel Wyss
--------------------------------------
-
-CREATE TABLE `sessiontotuple` (
-  `sessiontotupleId` int(11) NOT NULL AUTO_INCREMENT,
-  `sessionId` int(11) NOT NULL,
-  `tupleId` int(11) NOT NULL,
-  PRIMARY KEY (`sessiontotupleId`),
-  KEY `fk_tollsession_tuple_idx` (`sessionId`),
-  KEY `fk_tuple_tollsession_idx` (`tupleId`),
-  CONSTRAINT `fk_tollsession_tuple` FOREIGN KEY (`sessionId`) REFERENCES `session` (`sessionId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tuple_tollsession` FOREIGN KEY (`tupleId`) REFERENCES `tuple` (`tupleId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `provider`.`vtuples` AS select `provider`.`tuple`.`groupId` AS `groupId`,`provider`.`tuple`.`hash` AS `hash`,`provider`.`tuple`.`created` AS `created`,1 AS `price` from `provider`.`tuple`;
 
