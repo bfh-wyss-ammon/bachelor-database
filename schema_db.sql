@@ -190,12 +190,11 @@ CREATE TABLE `tuple` (
 -- created: 18.10.2017
 -- creator: Gabriel Wyss
 -------------------------------------
-
 CREATE TABLE `session` (
   `sessionId` int(11) NOT NULL AUTO_INCREMENT,
   `groupId` int(11) NOT NULL,
   `signatureId` int(11) DEFAULT NULL,
-  `state` int(2) NOT NULL,
+  `state` varchar(50) NOT NULL,
   `token` varchar(36) NOT NULL,
   `created` datetime DEFAULT NULL,
   `invoiceItemsCreated` datetime DEFAULT NULL,
@@ -207,8 +206,9 @@ CREATE TABLE `session` (
   KEY `fk_session_signature_idx` (`signatureId`),
   CONSTRAINT `fk_session_signature` FOREIGN KEY (`signatureId`) REFERENCES `signature` (`signatureId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tollsession` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`groupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `provider`.`vtuples` AS select `provider`.`tuple`.`groupId` AS `groupId`,`provider`.`tuple`.`hash` AS `hash`,`provider`.`tuple`.`created` AS `created`,1 AS `price` from `provider`.`tuple`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `provider`.`vtuples` AS select `provider`.`tuple`.`tupleId` AS `tupleId`,`provider`.`tuple`.`groupId` AS `groupId`,`provider`.`tuple`.`hash` AS `hash`,`provider`.`tuple`.`created` AS `created`,1 AS `price` from `provider`.`tuple`;
 
