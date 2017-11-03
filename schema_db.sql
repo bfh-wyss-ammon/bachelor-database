@@ -83,7 +83,7 @@ CREATE TABLE `membership` (
   PRIMARY KEY (`membershipId`),
   KEY `userId_idx` (`userId`),
   KEY `groupId_idx` (`groupId`),
-  CONSTRAINT `groupId` FOREIGN KEY (`groupId`) REFERENCES `cyrptogroup` (`groupId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `groupId` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`groupId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `userId` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
