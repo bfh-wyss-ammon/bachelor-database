@@ -2,7 +2,7 @@ USE authority;
 SET foreign_key_checks=0;
 
 TRUNCATE cryptogroup;
-TRUNCATE joinsession;
+TRUNCATE session;
 TRUNCATE publickey;
 TRUNCATE managerkey;
 TRUNCATE membership;

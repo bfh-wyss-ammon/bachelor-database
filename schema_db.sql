@@ -5,7 +5,7 @@ CREATE DATABASE IF NOT EXISTS `authority` /*!40100 DEFAULT CHARACTER SET utf8 */
 USE authority;
 
 -------------------------------------
--- table: user
+-- table: authority.user
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
@@ -19,7 +19,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: publickey
+-- table: authority.publickey
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
@@ -39,7 +39,7 @@ CREATE TABLE `publickey` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: managerkey
+-- table: authority.managerkey
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
@@ -52,11 +52,11 @@ CREATE TABLE `managerkey` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: cyrptogroup
+-- table: authority.cryptogroup
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
-CREATE TABLE `cyrptogroup` (
+CREATE TABLE `cryptogroup` (
   `groupId` int(11) NOT NULL AUTO_INCREMENT,
   `managerKeyId` int(11) NOT NULL,
   `publicKeyId` int(11) NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE `cyrptogroup` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: membership
+-- table: authority.membership
 -- created: 28.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
@@ -88,20 +88,20 @@ CREATE TABLE `membership` (
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: joinsession
+-- table: authority.session
 -- created: 29.09.2017
 -- creator: Pascal Ammon
 -------------------------------------
 
-CREATE TABLE `joinsession` (
-  `joinsessionId` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `session` (
+  `sessionId` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(11) NOT NULL,
   `token` varchar(36) NOT NULL,
   `created` datetime DEFAULT NULL,
-  PRIMARY KEY (`joinsessionId`),
-  KEY `userId_idx` (`userId`),
-  CONSTRAINT `userId` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`sessionId`),
+  KEY `buserId_idx` (`userId`),
+  CONSTRAINT `buserId` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -------------------------------------
 -- database: provider
@@ -109,7 +109,7 @@ CREATE TABLE `joinsession` (
 -- creator: Gabriel Wyss
 -------------------------------------
 
-CREATE DATABASE IF NOT EXISTS `provider` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE IF NOT EXISTS `provider` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE provider;
 -------------------------------------
 -- table: provider.publickey
@@ -129,7 +129,7 @@ CREATE TABLE `publickey` (
   `bigG` varchar(1400) NOT NULL,
   `bigH` varchar(1400) NOT NULL,
   PRIMARY KEY (`publicKeyId`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 -------------------------------------
 -- table: provider.cryptogroup
 -- created: 05.10.2017
@@ -143,7 +143,7 @@ CREATE TABLE `cryptogroup` (
   KEY `FK_groupId_idx` (`publicKeyId`),
   KEY `FK_groupId_id_idx` (`groupId`),
   CONSTRAINT `FK_publicKey` FOREIGN KEY (`publicKeyId`) REFERENCES `publickey` (`publicKeyId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -------------------------------------
 -- table: provider.signature
@@ -162,7 +162,7 @@ CREATE TABLE `signature` (
   `zbigR` varchar(1400) NOT NULL,
   `c` varchar(1400) NOT NULL,
   PRIMARY KEY (`signatureId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -------------------------------------
 -- table: provider.tuple
@@ -177,9 +177,38 @@ CREATE TABLE `tuple` (
   `latitude` decimal(13,10) NOT NULL,
   `created` datetime NOT NULL,
   `received` datetime NOT NULL,
+  `hash`varchar(200) NOT NULL,
   PRIMARY KEY (`tupleId`),
   KEY `fk_tuple_to_signature_idx` (`signatureId`),
   KEY `fk_tuple_to_group_idx` (`groupId`),
   CONSTRAINT `fk_tuple_to_group` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`providerGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tuple_to_signature` FOREIGN KEY (`signatureId`) REFERENCES `signature` (`signatureId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+
+-------------------------------------
+-- table: provider.session
+-- created: 18.10.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+CREATE TABLE `session` (
+  `sessionId` int(11) NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) NOT NULL,
+  `signatureId` int(11) DEFAULT NULL,
+  `state` varchar(50) NOT NULL,
+  `token` varchar(36) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `invoiceItemsCreated` datetime DEFAULT NULL,
+  `period` datetime DEFAULT NULL,
+  `signatureOnTuples` varchar(700) DEFAULT NULL,
+  `paidAmount` int(11) DEFAULT NULL,
+  PRIMARY KEY (`sessionId`),
+  KEY `fk_tollsession_idx` (`groupId`),
+  KEY `fk_session_signature_idx` (`signatureId`),
+  CONSTRAINT `fk_session_signature` FOREIGN KEY (`signatureId`) REFERENCES `signature` (`signatureId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tollsession` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`groupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `provider`.`vtuples` AS select `provider`.`tuple`.`tupleId` AS `tupleId`,`provider`.`tuple`.`groupId` AS `groupId`,`provider`.`tuple`.`hash` AS `hash`,`provider`.`tuple`.`created` AS `created`,1 AS `price` from `provider`.`tuple`;
+
