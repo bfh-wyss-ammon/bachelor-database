@@ -205,10 +205,11 @@ CREATE TABLE `session` (
   KEY `fk_tollsession_idx` (`groupId`),
   KEY `fk_session_signature_idx` (`signatureId`),
   CONSTRAINT `fk_session_signature` FOREIGN KEY (`signatureId`) REFERENCES `signature` (`signatureId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tollsession` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`groupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_tollsession` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`providerGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `provider`.`vtuples` AS select `provider`.`tuple`.`tupleId` AS `tupleId`,`provider`.`tuple`.`groupId` AS `groupId`,`provider`.`tuple`.`hash` AS `hash`,`provider`.`tuple`.`created` AS `created`,1 AS `price` from `provider`.`tuple`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `provider`.`vtuples` AS  SELECT `t`.`tupleId` AS `tupleId`, `t`.`hash` AS `hash`, `t`.`created` AS `created`, `g`.`groupId` AS `groupId`, 1 AS `price` FROM (`provider`.`tuple` `t` JOIN `provider`.`cryptogroup` `g`) WHERE (`t`.`groupId` = `g`.`providerGroupId`);
 
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `provider`.`payments` AS select `provider`.`session`.`period` AS `period`,`provider`.`session`.`groupId` AS `groupId`,sum(`provider`.`session`.`paidAmount`) AS `total` from `provider`.`session` group by `provider`.`session`.`groupId`,`provider`.`session`.`period`;
