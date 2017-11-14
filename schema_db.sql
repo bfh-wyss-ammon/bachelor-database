@@ -209,19 +209,6 @@ CREATE TABLE `session` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -------------------------------------
--- table: provider.disputeresult
--- created: 09.11.2017
--- creator: Gabriel Wyss
--------------------------------------
-CREATE TABLE `disputeresult` (
-  `resultId` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` varchar(255) NOT NULL,
-  `deltaToll` int(11) NOT NULL,
-  PRIMARY KEY (`resultId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
-
--------------------------------------
 -- table: provider.disputesession
 -- created: 09.11.2017
 -- creator: Gabriel Wyss
@@ -229,7 +216,6 @@ CREATE TABLE `disputeresult` (
 CREATE TABLE `disputesession` (
   `sessionId` int(11) NOT NULL AUTO_INCREMENT,
   `groupId` int(11) NOT NULL,
-  `disputeResultId` int(11) DEFAULT NULL,
   `state` varchar(50) NOT NULL,
   `token` varchar(36) NOT NULL,
   `created` datetime DEFAULT NULL,
@@ -237,9 +223,23 @@ CREATE TABLE `disputesession` (
   `signatureOnResult` varchar(700) DEFAULT NULL,
   PRIMARY KEY (`sessionId`),
   KEY `fk_disputesession_idx` (`groupId`),
-  KEY `fk_disputesession_signature_idx` (`disputeResultId`),
-  CONSTRAINT `fk_disputesession_group` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`providerGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_disputesession` FOREIGN KEY (`disputeResultId`) REFERENCES `disputeresult` (`resultId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_disputesession_group` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`providerGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-------------------------------------
+-- table: provider.disputeresult
+-- created: 09.11.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+CREATE TABLE `disputeresult` (
+  `resultId` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` varchar(255) NOT NULL,
+  `disputesessionId` int(11) NOT NULL,
+  `deltaToll` int(11) NOT NULL,
+  `idx` int(11) DEFAULT NULL,
+  PRIMARY KEY (`resultId`),
+  KEY `fk_disputesession_idx` (`disputesessionId`),
+  CONSTRAINT `fk_disputesession` FOREIGN KEY (`disputesessionId`) REFERENCES `disputesession` (`sessionId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
