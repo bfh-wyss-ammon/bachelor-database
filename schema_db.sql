@@ -201,12 +201,13 @@ CREATE TABLE `session` (
   `period` datetime DEFAULT NULL,
   `signatureOnTuples` varchar(700) DEFAULT NULL,
   `paidAmount` int(11) DEFAULT NULL,
+  `hash` varchar(700) DEFAULT NULL,
   PRIMARY KEY (`sessionId`),
   KEY `fk_tollsession_idx` (`groupId`),
   KEY `fk_session_signature_idx` (`signatureId`),
   CONSTRAINT `fk_session_signature` FOREIGN KEY (`signatureId`) REFERENCES `signature` (`signatureId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tollsession` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`providerGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -------------------------------------
 -- table: provider.disputesession
