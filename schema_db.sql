@@ -201,15 +201,49 @@ CREATE TABLE `session` (
   `period` datetime DEFAULT NULL,
   `signatureOnTuples` varchar(700) DEFAULT NULL,
   `paidAmount` int(11) DEFAULT NULL,
+  `hash` varchar(700) DEFAULT NULL,
   PRIMARY KEY (`sessionId`),
   KEY `fk_tollsession_idx` (`groupId`),
   KEY `fk_session_signature_idx` (`signatureId`),
   CONSTRAINT `fk_session_signature` FOREIGN KEY (`signatureId`) REFERENCES `signature` (`signatureId`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tollsession` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`providerGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-------------------------------------
+-- table: provider.disputesession
+-- created: 09.11.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+CREATE TABLE `disputesession` (
+  `sessionId` int(11) NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) NOT NULL,
+  `state` varchar(50) NOT NULL,
+  `token` varchar(36) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `period` datetime DEFAULT NULL,
+  `signatureOnResult` varchar(700) DEFAULT NULL,
+  PRIMARY KEY (`sessionId`),
+  KEY `fk_disputesession_idx` (`groupId`),
+  CONSTRAINT `fk_disputesession_group` FOREIGN KEY (`groupId`) REFERENCES `cryptogroup` (`providerGroupId`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+-------------------------------------
+-- table: provider.disputeresult
+-- created: 09.11.2017
+-- creator: Gabriel Wyss
+-------------------------------------
+CREATE TABLE `disputeresult` (
+  `resultId` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` varchar(255) NOT NULL,
+  `disputesessionId` int(11) NOT NULL,
+  `deltaToll` int(11) NOT NULL,
+  `idx` int(11) DEFAULT NULL,
+  PRIMARY KEY (`resultId`),
+  KEY `fk_disputesession_idx` (`disputesessionId`),
+  CONSTRAINT `fk_disputesession` FOREIGN KEY (`disputesessionId`) REFERENCES `disputesession` (`sessionId`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `provider`.`vtuples` AS  SELECT `t`.`tupleId` AS `tupleId`, `t`.`hash` AS `hash`, `t`.`created` AS `created`, `g`.`groupId` AS `groupId`, 1 AS `price` FROM (`provider`.`tuple` `t` JOIN `provider`.`cryptogroup` `g`) WHERE (`t`.`groupId` = `g`.`providerGroupId`);
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `provider`.`payments` AS select `provider`.`session`.`period` AS `period`,`provider`.`session`.`groupId` AS `groupId`,sum(`provider`.`session`.`paidAmount`) AS `total` from `provider`.`session` group by `provider`.`session`.`groupId`,`provider`.`session`.`period`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `provider`.`payments` AS select `provider`.`session`.`period` AS `period`,`provider`.`cryptogroup`.`groupId` AS `groupId`,sum(`provider`.`session`.`paidAmount`) AS `total` from (`provider`.`session` join `provider`.`cryptogroup`) where (`provider`.`cryptogroup`.`providerGroupId` = `provider`.`session`.`groupId`) group by `provider`.`session`.`groupId`,`provider`.`session`.`period`;

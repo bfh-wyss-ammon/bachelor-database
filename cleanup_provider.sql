@@ -6,3 +6,5 @@ TRUNCATE signature;
 TRUNCATE publickey;
 TRUNCATE tuple;
 TRUNCATE session;
+TRUNCATE disputeresult;
+TRUNCATE disputesession;
