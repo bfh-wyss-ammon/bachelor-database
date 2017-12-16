@@ -1,0 +1,40 @@
+
+# Some things that run always
+touch /var/lock/authority
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+        if [[ $(ps -aux | grep Authority | wc -l) = *2* ]]; then
+                echo "Authority is already running!"
+        fi
+        if [[ $(ps -aux | grep Authority | wc -l) = *1* ]]; then
+         	echo "Starting authority"
+        	cd /opt/mobilitypricing/authority/
+        	sudo -u pricing nohup java -Xmx1024m -jar Authority-1.0.0-jar-with-dependencies.jar > /dev/null 2>&1 &
+        	echo $! > authority.pid
+		echo "Start successful"
+        fi
+    ;;
+  stop)
+    echo "Stopping authority"
+	cd /opt/mobilitypricing/authority/
+	kill -9 `cat authority.pid`
+	rm -f authority.pid
+    ;;
+  status)
+
+        if [[ $(ps -aux | grep Authority | wc -l) = *2* ]]; then
+                echo "Authority is running!"
+        fi
+        if [[ $(ps -aux | grep Authority | wc -l) = *1* ]]; then
+                echo "Authority is not running!"
+        fi
+    ;;
+  *)
+    echo "Usage: /etc/init.d/authority {start|stop|status}"
+    exit 1
+    ;;
+esac
+
+exit 0
