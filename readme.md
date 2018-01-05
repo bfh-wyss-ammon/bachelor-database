@@ -7,3 +7,4 @@
 **Supervisor**: Dr. Eric Dubuis
 
 ### Install Notes
+Please see setup script
