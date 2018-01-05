@@ -1,0 +1,40 @@
+# Some things that run always
+touch /var/lock/provider
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+
+        if [[ $(ps -aux | grep Provider | wc -l) = *2* ]]; then
+                echo "Provider is already running!"
+        fi
+        if [[ $(ps -aux | grep Provider | wc -l) = *1* ]]; then
+        	echo "Starting provider"
+        	cd /opt/mobilitypricing/provider/
+        	sudo -u pricing nohup java -Xmx1024m -jar Provider-1.0.0-jar-with-dependencies.jar > /dev/null 2>&1 &
+        	echo $! > provider.pid
+		echo "Started provider successfully"
+        fi
+    ;;
+  stop)
+    	echo "Stopping provider"
+	cd /opt/mobilitypricing/provider/
+	kill -9 `cat provider.pid`
+	rm -f provider.pid
+    ;;
+  status)
+	
+	if [[ $(ps -aux | grep Provider | wc -l) = *2* ]]; then
+  		echo "Provider is running!"
+	fi
+	if [[ $(ps -aux | grep Provider | wc -l) = *1* ]]; then
+  		echo "Provider is not running!"
+	fi
+    ;;
+  *)
+    echo "Usage: /etc/init.d/provider {start|stop|status}"
+    exit 1
+    ;;
+esac
+
+exit 0

@@ -1,0 +1,7 @@
+/opt/mobilitypricing/provider/*.txt {
+    missingok
+    notifempty
+    rotate 7
+    size 5k
+    compress
+}
